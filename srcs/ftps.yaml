@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftps-service
+  labels:
+    app: ftps
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "shared"
+spec:
+  type: LoadBalancer
+  selector:
+    app: ftps
+  ports:
+  - name: ftps
+    port: 21
+    targetPort: 21
+  - name: ftps-pmin
+    port: 21000
+    targetPort: 21000
+  - name: ftps-pmid
+    port: 21001
+    targetPort: 21001
+  - name: ftps-pmax
+    port: 21002
+    targetPort: 21002
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wp-pvc
+  labels:
+    app: wordpress
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ftps-deployment
+  labels:
+    app: ftps
+spec:
+  selector:
+    matchLabels:
+      app: ftps
+  template:
+    metadata:
+      labels:
+        app: ftps
+    spec:
+      containers:
+      - name: ftps
+        image: i_ftps
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 21
+          name: actport
+        - containerPort: 21000
+          name: p1
+        - containerPort: 21001
+          name: p2
+        - containerPort: 21002
+          name: p3
+        livenessProbe:
+          exec:
+            command:
+            - /bin/ash
+            - -c
+            - 'pgrep telegraf && pgrep vsftpd'
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        volumeMounts:
+        - name: wp-persistent-storage
+          mountPath: /var/ftps
+      volumes:
+      - name: wp-persistent-storage
+        persistentVolumeClaim:
+          claimName: wp-pvc

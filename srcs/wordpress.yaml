@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-service
+  labels:
+    app: wordpress
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "shared"
+spec:
+  type: LoadBalancer
+  selector:
+    app: wordpress
+  ports:
+    - name: wordpress
+      port: 5050
+      targetPort: 5050
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-deployment
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - image: i_wordpress
+        imagePullPolicy: Never
+        name: wordpress
+        ports:
+        - containerPort: 5050
+          name: wordpress
+        livenessProbe:
+          exec:
+            command:
+            - /bin/ash
+            - -c
+            - 'pgrep telegraf && pgrep php-fpm'
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        volumeMounts:
+        - name: wp-persistent-storage
+          mountPath: /var/www/wp-config
+      volumes:
+      - name: wp-persistent-storage
+        persistentVolumeClaim:
+          claimName: wp-pvc

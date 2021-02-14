@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>welcome to ft_services</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {width: 80%; margin: auto;}
+		</style>
+	</head>
+	<body>
+		<h1>ft_services</h1>
+
+		<p><strong>Nginx <a href="https://192.168.49.10:443">(https://192.168.49.10:443)</a></strong></p>
+		<p><strong>You can access the nginx container by logging into SSH</strong></p>
+		<p>ssh syudai@192.168.49.10 -p 22 (ssh-keygen -R '192.168.49.10'            cf.<a href="https://docs.oracle.com/cd/E40528_01/b72807/vmcli-ssh.html">https://docs.oracle.com/cd/E40528_01/b72807/vmcli-ssh.html</a>)</p>
+		<p>Password: password</p>
+		<p></p>
+		<p><hr align="center"></p>
+		<p></p>
+		<strong>FTPS : </strong>
+		<strong>A FTPS server listening on port 21.</strong>
+		<p>sudo apt install lftp</p>
+		<p>lftp -e 'set ssl:verify-certificate false' -u syudai,password -p 21 192.168.49.10 (hint: exec touch -> get | put)</p>
+		<p></p>
+		<p><hr align="center"></p>
+		<p></p>
+		<p><strong>WordPress : <a href="https://192.168.49.10:5050">(https://192.168.49.10:5050)</a></strong></p>
+		<p><strong>WordPress (redirect)<a href="https://192.168.49.10/wordpress">(https://192.168.49.10/wordpress)</a></strong></p>
+		<p><em>Username: admin</em></p>
+		<p><em>Passwordr: password</em></p>
+		<p></p>
+		<p><hr align="center"></p>
+		<p></p>
+		<p><strong>PhpMyAdmin <a href="https://192.168.49.10:5000">(https://192.168.49.10:5000)</a></strong></p>
+		<p><strong>PhpMyAdmin (reverse proxy)<a href="https://192.168.49.10/phpmyadmin">(https://192.168.49.10/phpmyadmin)</a></strong></p>
+		<p><em>Username: syudai</em></p>
+		<p><em>Passwordr: password</em></p>
+		<p></p>
+		<p><hr align="center"></p>
+		<p></p>
+		<strong>Grafana <a href="https://192.168.49.10:3000">(https://192.168.49.10:3000)</a></strong>
+		<p><em>Username: syudai</em></p>
+		<p><em>Passwordr: password</em></p>
+		
+	</body>
+</html>
